@@ -60,27 +60,25 @@ const login = async (req, res, next) => {
   }
 };
 
-// const getCurrent = (req, res) => {
-//   const { email, subscription } = req.user;
-//   res.json({
-//     email,
-//     subscription,
-//   });
-// };
+const getCurrent = (req, res) => {
+  res.json(req.user);
+};
 
-// const logout = async (req, res, next) => {
-//   try {
-//     const { _id } = req.user;
-//     await User.findByIdAndUpdate(_id, { token: '' });
-//     res.status(204).json();
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+const logout = async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+    await User.findByIdAndUpdate(_id, { token: '' });
+    res.status(200).json({
+      message: 'Logout succses',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   register,
   login,
-  //   getCurrent,
-  //   logout,
+  getCurrent,
+  logout,
 };
