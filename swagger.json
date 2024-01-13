@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "version": "2.0.2",
-    "title": "Swagger test",
-    "description": "Showing off swagger-ui-express",
+    "version": "1.0.0",
+    "title": "Power-pulse",
+    "description": "Power-pulse swagger-ui-express",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
@@ -11,7 +11,7 @@
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "http://localhost:3000" }],
+  "servers": [{ "url": "http://localhost:3000" }, {"url": "https://leader-code-team-power-pulse-back-end.onrender.com/"}],
   "tags": [
     {
       "name": "Auth",
@@ -48,31 +48,89 @@
             }
           },
           "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
+            "description": "Bad request",
+            "content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+							}
+						}
+          }
+        },
           "409": {
-            "description": "Provided email already exists",
-            "content": {}
+            "description": "Email in use",
+            "content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+            }
           }
         }
       }
-    }
+    },
+		"/api/auth/login": {
+			"post": {
+				"tags": ["Auth"],
+				"summary": "User login",
+				"parameters": [],
+        "security": [{ "Bearer": [] }],
+				"requestBody": {
+					"description": "Login object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/LoginResponse"
+							 }
+						  }
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}						
+					}
+				}
+			}	
+		}    
+
   },
   "components": {
     "schemas": {
       "RegistrationRequest": {
         "type": "object",
-        "required": ["email", "password"],
+        "required": ["name", "email", "password"],
         "properties": {
+					"name": {
+						"type": "string",
+						"description": "User name"
+					},          
           "email": {
             "type": "string",
-            "description": "User's email",
+            "description": "User email",
             "format": "email"
           },
           "password": {
             "type": "string",
-            "description": "User's password",
+            "description": "User password",
             "example": "qwerty123"
           }
         }
@@ -82,23 +140,48 @@
         "items": {
           "type": "object",
           "properties": {
+							"name": {
+								"type": "string",
+								"description": "User name"
+							},
             "email": {
               "type": "string",
-              "description": "User's email",
+              "description": "User email",
               "format": "email"
             },
-            "userId": {
-              "type": "number",
-              "description": "User's id",
-              "example": "32143232436545474"
-            }
+					"message": {
+						"type": "string",
+						"description": "Message"
+					  } 
           }
-        },
-        "example": [
-          { "email": "1@gmail.com", "userId": "1" },
-          { "email": "2@gmail.com", "userId": "2" }
-        ]
-      }
+        }
+      },
+"LoginRequest": {
+				"type": "object",
+				"required": ["email", "password"],
+				"properties": {
+					"email": {
+						"type": "string",
+						"description": "User email",
+						"format": "email"
+					},
+					"password": {
+						"type": "string",
+						"description": "User password",
+						"example": "qwe123"
+					}
+				}
+			},
+			"LogoutRequest": {
+				"type": "object",
+				"required": ["_id"],
+				"properties": {
+					"_id": {
+						"type": "string",
+						"description": "User id"
+					}
+				}
+			}      
     },
     "securitySchemes": {
       "Bearer": {
