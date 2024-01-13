@@ -11,7 +11,7 @@
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "http://localhost:3002" }, {"url": "https://leader-code-team-power-pulse-back-end.onrender.com/"}],
+  "servers": [{ "url": "http://localhost:3000" }, {"url": "https://leader-code-team-power-pulse-back-end.onrender.com/"}],
   "tags": [
     {
       "name": "Auth",
@@ -19,7 +19,7 @@
     }
   ],
   "paths": {
-    "/auth/register": {
+    "/api/auth/register": {
       "post": {
         "tags": ["Auth"],
         "summary": "User registration",
