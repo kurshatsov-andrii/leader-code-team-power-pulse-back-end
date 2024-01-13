@@ -32,13 +32,13 @@ const productCategorySchema = new Schema({
 
 productCategorySchema.post('save', handleMongooseError);
 
-const Product = model('Product', productCategorySchema);
+const Product = model('product', productCategorySchema);
 
 const categorySchema = new Schema({
   productCategories: Array,
 });
 
-const Category = model('Category', categorySchema);
+const Category = model('category', categorySchema);
 
 const productValidationSchema = Joi.object({
   weight: Joi.number().required(),
