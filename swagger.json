@@ -23,8 +23,7 @@
       "post": {
         "tags": ["Auth"],
         "summary": "User registration",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
+        "parameters": [],        
         "requestBody": {
           "description": "Registration's object",
           "required": true,
@@ -75,7 +74,6 @@
 				"tags": ["Auth"],
 				"summary": "User login",
 				"parameters": [],
-        "security": [{ "Bearer": [] }],
 				"requestBody": {
 					"description": "Login object",
 					"required": true,
@@ -156,7 +154,7 @@
           }
         }
       },
-"LoginRequest": {
+      "LoginRequest": {
 				"type": "object",
 				"required": ["email", "password"],
 				"properties": {
@@ -172,16 +170,41 @@
 					}
 				}
 			},
-			"LogoutRequest": {
+			"LoginResponse": {
 				"type": "object",
-				"required": ["_id"],
 				"properties": {
-					"_id": {
+					"token": {
 						"type": "string",
-						"description": "User id"
+						"description": "User token"
+					},
+					"user": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string",
+								"description": "User name"
+							},
+							"email": {
+								"type": "string",
+								"description": "User email"
+							},
+							"avatar": {
+								"type": "string",
+								"description": "Avatar URL"
+							}
+						}	
+					}					 
+				}
+			},
+			"ErrorResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "Message"
 					}
 				}
-			}      
+			}			
     },
     "securitySchemes": {
       "Bearer": {
