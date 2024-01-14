@@ -11,7 +11,7 @@
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "http://localhost:3002" }, {"url": "https://leader-code-team-power-pulse-back-end.onrender.com/"}],
+  "servers": [{"url": "https://leader-code-team-power-pulse-back-end.onrender.com/"}, { "url": "http://localhost:3002" }],
   "tags": [
     {
       "name": "Auth",
@@ -87,7 +87,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Successful operation",
 						"content": {
 						  "application/json": {
 							 "schema": {
@@ -108,7 +108,101 @@
 					}
 				}
 			}	
-		}    
+		},    
+"/api/auth/current": {
+			"get": {
+				"tags": ["Auth"],
+				"summary": "Current user",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {},
+				"responses": {
+				"200": {
+						"description": "Successful operation",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/CurrentResponse"
+							 }
+						  }
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					}
+
+				}
+			}	
+		},
+		"/api/auth/logout": {
+			"post": {
+				"tags": ["Auth"],
+				"summary": "User logout",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {
+					"description": "Logout object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LogoutRequest"
+							}
+						}
+					}
+				},
+				"200": {
+						"description": "Successful operation",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/CurrentResponse"
+							 }
+						  }
+						}
+					},
+
+				"responses": {
+					"204": {
+						"description": "No Content",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/LogoutResponse"
+							 }
+						  }
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					}
+				}
+			}
+		}
 
   },
   "components": {
@@ -187,13 +281,34 @@
 							"email": {
 								"type": "string",
 								"description": "User email"
-							},
-							"avatar": {
-								"type": "string",
-								"description": "Avatar URL"
 							}
 						}	
 					}					 
+				}
+			},
+			"CurrentResponse": {
+				"type": "object",
+				"required": ["name", "email"],
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "User name"
+					},
+					"email": {
+						"type": "string",
+						"description": "User email",
+						"format": "email"
+					}
+				}
+			},
+			"LogoutResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "Message",
+						"example": "logout was successful"
+					}
 				}
 			},
 			"ErrorResponse": {
