@@ -1,17 +1,25 @@
 const { HttpError } = require('../helpers');
-const ExerciseCategoriesModel = require('../models/exerciseCategoriesSchema');
-const ExercisesModel = require('../models/exercisesSchema');
 const ExerciseService = require('../services/exerciseService');
 
 class ExersisesController {
   constructor() {
     this.service = ExerciseService;
   }
-
+  
   bodyParts = 'Body parts';
   muscles = 'Muscles';
   equipment = 'Equipment';
-
+  
+  fetchExercises = async (req, res) => {
+    const exercises = await this.service.fetchExercises()
+  
+    if (!exercises) {
+      HttpError(400)
+    }
+  
+    res.status(200).json({ data: exercises, length: exercises.length });
+  };
+  
   fetchAllCategories = async query => {
     const allCategories = await this.service.fetchCategories(query);
 
@@ -46,16 +54,6 @@ class ExersisesController {
     res.status(200).json({ data: equipment, length: equipment.length });
   };
 
-  fetchExercises = async (req, res) => {
-    const exercises = await this.service.fetchExercises()
-
-    if (!exercises) {
-      res.status(500);
-      throw new Error('Server error');
-    }
-
-    res.status(200).json({ data: exercises, length: exercises.length });
-  };
 }
 
 module.exports = new ExersisesController();
