@@ -4,10 +4,33 @@ const ExersisesController = require('../../controllers/exersises');
 const router = express.Router();
 
 router.get(
+  '/',
+  authenticate,
+  ExersisesController.fetchExercises
+);
+
+router.get(
   '/categories',
   authenticate,
-  ExersisesController.fetchExerciseCategories
+  ExersisesController.fetchCategories
 );
-router.get('/exercises', authenticate, ExersisesController.fetchExercises);
+
+router.get(
+  '/body-part',
+  authenticate,
+  ExersisesController.fetchBodyParts
+);
+
+router.get(
+  '/muscles',
+  authenticate,
+  ExersisesController.fetchMuscles
+);
+
+router.get(
+  '/equipment',
+  authenticate,
+  ExersisesController.fetchEquipment
+);
 
 module.exports = router;
