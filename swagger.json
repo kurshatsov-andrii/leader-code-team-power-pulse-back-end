@@ -286,6 +286,26 @@
 					}					 
 				}
 			},
+			"LogoutRequest": {
+				"type": "object",
+				"required": ["_id"],
+				"properties": {
+					"_id": {
+						"type": "string",
+						"description": "User id"
+					}
+				}
+			},
+"LogoutResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "Message",
+						"example": "logout was successful"
+					}
+				}
+			},			
 			"CurrentResponse": {
 				"type": "object",
 				"required": ["name", "email"],
@@ -300,17 +320,7 @@
 						"format": "email"
 					}
 				}
-			},
-			"LogoutResponse": {
-				"type": "object",
-				"properties": {
-					"message": {
-						"type": "string",
-						"description": "Message",
-						"example": "logout was successful"
-					}
-				}
-			},
+			},			
 			"ErrorResponse": {
 				"type": "object",
 				"properties": {
