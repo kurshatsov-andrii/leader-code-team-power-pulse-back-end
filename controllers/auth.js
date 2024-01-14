@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const { HttpError } = require('../helpers');
+const { HttpError, calculateBMR } = require('../helpers');
 const { User } = require('../models/user');
 
 const { SECRET_KEY } = process.env;
@@ -76,9 +76,41 @@ const logout = async (req, res, next) => {
   }
 };
 
+const addUserData = async (req, res, next) => {
+  try {
+    const { email } = req.user;
+    const updatedData = await User.findOneAndUpdate({ email }, req.body, {
+      new: true,
+    });
+
+    const { desiredWeight, height, birthday, sex, levelActivity } = updatedData;
+
+    const bmr = calculateBMR(
+      desiredWeight,
+      height,
+      birthday,
+      sex,
+      levelActivity
+    );
+
+    updatedData.bmr = bmr;
+
+    await updatedData.save();
+
+    if (updatedData) {
+      res.status(201).json(updatedData);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   login,
   getCurrent,
   logout,
+  addUserData,
 };
