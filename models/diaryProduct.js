@@ -1,5 +1,6 @@
-const { Schema } = require('mongoose');
+const { Schema, model } = require('mongoose');
 const Joi = require('joi');
+const { handleMongooseError } = require('../helpers');
 
 const dateFormat = /^\d{2}\/\d{2}\/\d{4}$/i;
 
@@ -7,26 +8,41 @@ const productSchema = new Schema(
   {
     productId: {
       type: String,
+      ref: 'product',
       required: true,
     },
-    // date: {
-    //   type: String,
-    //   format: 'dd/mm/YYYY',
-    //   required: true || date,
-    // },
-    // amount: {
+    // weight: {
     //   type: Number,
-    //   min: 1,
     //   required: true,
+    //   min: 1,
     // },
     // calories: {
     //   type: Number,
-    //   min: 1,
     //   required: true,
+    //   min: 1,
+    // },
+    // category: {
+    //   type: String,
+    //   required: true,
+    // },
+    // title: {
+    //   type: String,
+    //   required: true,
+    // },
+    // groupBloodNotAllowed: {
+    //   type: Boolean,
+    //   default: true,
+    // },
+    // amount: {
+    //   type: Number,
+    //   required: true,
+    //   min: 1,
     // },
   },
   { versionKey: false, timestamps: true }
 );
+
+// productSchema.post('save', handleMongooseError);
 
 const joiAddProductSchema = Joi.object({
   productId: Joi.string().required(),
@@ -35,11 +51,13 @@ const joiAddProductSchema = Joi.object({
   // calories: Joi.number().min(1).required(),
   // weight: Joi.number().min(1).required(),
   // groupBloodNotAllowed: Joi.boolean().required(),
-  // amount: Joi.number().min(1).required(),
+  amount: Joi.number().min(1).required(),
 });
 const joiDeleteProductSchema = Joi.object({
   id: Joi.string().required(),
 });
+
+// const DiaryProduct = model('diaryproduct', productSchema);
 
 const joiProductSchemas = {
   joiAddProductSchema,
@@ -47,6 +65,6 @@ const joiProductSchemas = {
 };
 
 module.exports = {
-  productSchema,
+  // DiaryProduct,
   joiProductSchemas,
 };

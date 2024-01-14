@@ -2,9 +2,28 @@ const { diaryExercise } = require('../models/diaryExercise');
 const { ctrlWrapper, HttpError } = require('../helpers');
 const { Diary } = require('../models/diary');
 
+const getDiary = async (req, res) => {
+  // const { _id: owner } = req.user;
+  // const { date } = req.query;
+  const { diaryEntryId } = req.params;
+
+  // const filter = { date, owner };
+  // const user = await Diary.findOne(filter);
+
+  const diaryEntry = await Diary.findById(diaryEntryId)
+    .populate('products')
+    .populate('exercises');
+
+  if (!diaryEntry) {
+    throw HttpError(400, 'invalid diary ID');
+  }
+
+  res.status(200).json(diaryEntry);
+};
+
 const addProduct = async (req, res) => {
-  const { productId } = req.body;
-  // const { _id = '65a29de0fe46bdf5bbb31e17' } = req.user;
+  const { productId, amount } = req.body;
+  // const { _id } = req.user;
   const _id = '65a29de0fe46bdf5bbb31e17';
 
   const existingProduct = await Diary.findOne({
@@ -21,6 +40,7 @@ const addProduct = async (req, res) => {
       $push: {
         products: {
           productId,
+          amount,
         },
       },
     },
@@ -36,7 +56,7 @@ const deleteProduct = async (req, res) => {
   const _id = '65a29de0fe46bdf5bbb31e17';
 
   const diaryEntry = await Diary.findOneAndUpdate(
-    { owner: _id },
+    { owner: _id, 'products.productId': id },
     {
       $pull: {
         products: { productId: id },
@@ -86,7 +106,7 @@ const deleteExercise = async (req, res) => {
   const _id = '65a29de0fe46bdf5bbb31e17';
 
   const diaryEntry = await Diary.findOneAndUpdate(
-    { owner: _id },
+    { owner: _id, 'exercises.exerciseId': id },
     {
       $pull: {
         exercises: { exerciseId: id },
@@ -99,10 +119,11 @@ const deleteExercise = async (req, res) => {
     throw HttpError(404, 'Diary entry not found');
   }
 
-  res.status(200).json('Product deleted successfully');
+  res.status(200).json('Exercise deleted successfully');
 };
 
 module.exports = {
+  getDiary: ctrlWrapper(getDiary),
   addProduct: ctrlWrapper(addProduct),
   deleteProduct: ctrlWrapper(deleteProduct),
   addExercise: ctrlWrapper(addExercise),

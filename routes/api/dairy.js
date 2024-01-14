@@ -6,6 +6,8 @@ const { joiExerciseSchemas } = require('../../models/diaryExercise');
 const { validateBody, authenticate } = require('../../middlewares');
 const controller = require('../../controllers/diary');
 
+router.get('/getDiary/:diaryEntryId', controller.getDiary);
+
 router.post(
   '/addProduct',
   // authenticate,

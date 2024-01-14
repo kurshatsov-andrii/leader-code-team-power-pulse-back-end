@@ -3,7 +3,7 @@ const { handleMongooseError } = require('../helpers');
 const { productSchema } = require('./diaryProduct');
 const { exerciseSchema } = require('./diaryExercise');
 
-const dateFormat = /^\d{2}\/\d{2}\/\d{4}$/i;
+// const dateFormat = /^\d{2}\/\d{2}\/\d{4}$/i;
 
 const diarySchema = new Schema(
   {
@@ -19,15 +19,34 @@ const diarySchema = new Schema(
 
     consumedCalories: {
       type: Number,
+      default: 0,
     },
 
     burnedCalories: {
       type: Number,
+      default: 0,
     },
 
-    products: [],
+    products: [
+      {
+        productId: {
+          type: Object,
+          ref: 'Product',
+        },
+        amount: {
+          type: Number,
+          required: true,
+          min: 1,
+        },
+      },
+    ],
 
-    exercises: [],
+    exercises: [
+      {
+        type: Object,
+        ref: 'Exercise',
+      },
+    ],
   },
   { versionKey: false, timestamps: true }
 );
