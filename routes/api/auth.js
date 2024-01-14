@@ -3,19 +3,11 @@ const router = express.Router();
 
 const ctrl = require('../../controllers/auth');
 
-const {
-  validateBody,
-  authenticate,
-  //   upload,
-} = require('../../middlewares');
+const { validateBody, authenticate } = require('../../middlewares');
 
 const { schemas } = require('../../models/user');
 
 router.post('/register', validateBody(schemas.registerSchema), ctrl.register);
-
-// router.get('/verify/:verificationToken', ctrl.verifyEmail);
-
-// router.post('/verify', authenticate, ctrl.resendVerifyEmail);
 
 router.post('/login', validateBody(schemas.loginSchema), ctrl.login);
 
@@ -23,11 +15,11 @@ router.get('/current', authenticate, ctrl.getCurrent);
 
 router.post('/logout', authenticate, ctrl.logout);
 
-// router.patch(
-//   '/avatar',
-//   authenticate,
-//   upload.single('avatar'),
-//   ctrl.updateAvatar
-// );
+router.patch(
+  '/profile',
+  authenticate,
+  validateBody(schemas.addUserParamsSchemaJoi),
+  ctrl.addUserData
+);
 
 module.exports = router;
