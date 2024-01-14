@@ -4,10 +4,9 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
-
 const authRouter = require('./routes/api/auth');
-const exercisesRouter = require('./routes/api/exersises')
-// const diaryRouter = require('./routes/api/diary')
+const exercisesRouter = require('./routes/api/exersises');
+const diaryRouter = require('./routes/api/dairy');
 const productsRouter = require('./routes/api/products');
 
 const app = express();
@@ -21,8 +20,8 @@ app.use(express.static('public'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/api/auth', authRouter);
-app.use('/exercises', exercisesRouter)
-// app.use('/diary', diaryRouter)
+app.use('/exercises', exercisesRouter);
+app.use('/diary', diaryRouter);
 app.use('/products', productsRouter);
 
 app.use((req, res) => {
