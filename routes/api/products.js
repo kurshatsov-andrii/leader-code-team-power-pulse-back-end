@@ -8,4 +8,12 @@ router.get('/', authenticate, ctrl.getAllProducts);
 // authenticate
 router.get('/byBloodGroup', authenticate, ctrl.getProductByBloodGroup);
 
+router.get('/allowed', authenticate, ctrl.getAllowed);
+
+router.get('/forbiden', authenticate, ctrl.getForbiden);
+
+router.get('/category', authenticate, ctrl.getProductsCategory);
+
+router.get('/current/:productId', authenticate, ctrl.getProductById);
+
 module.exports = router;
