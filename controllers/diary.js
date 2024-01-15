@@ -1,62 +1,74 @@
-const { diaryExercise } = require('../models/diaryExercise');
 const { ctrlWrapper, HttpError } = require('../helpers');
 const { Diary } = require('../models/diary');
 
 const getDiary = async (req, res) => {
-  // const { _id: owner } = req.user;
-  // const { date } = req.query;
-  const { diaryEntryId } = req.params;
+  const { _id: owner } = req.user;
+  const { date } = req.body;
 
-  // const filter = { date, owner };
-  // const user = await Diary.findOne(filter);
-
-  const diaryEntry = await Diary.findById(diaryEntryId)
-    .populate('products')
-    .populate('exercises');
+  const diaryEntry = await Diary.findOne({
+    owner,
+    date,
+  })
+    .populate(
+      'products.productId',
+      'weight calories category title groupBloodNotAllowed'
+    )
+    .populate(
+      'exercises.exerciseId',
+      'bodyPart equipment gifUrl name target burnedCalories time'
+    );
 
   if (!diaryEntry) {
-    throw HttpError(400, 'invalid diary ID');
+    throw HttpError(400, 'Diary entry not found');
   }
 
   res.status(200).json(diaryEntry);
 };
 
 const addProduct = async (req, res) => {
-  const { productId, amount } = req.body;
-  // const { _id } = req.user;
-  const _id = '65a29de0fe46bdf5bbb31e17';
+  const { productId, amount, date } = req.body;
+  const { _id: owner } = req.user;
 
-  const existingProduct = await Diary.findOne({
-    owner: _id,
-    'products.productId': productId,
+  let diaryEntry = await Diary.findOne({
+    owner,
+    date,
   });
+
+  if (!diaryEntry) {
+    diaryEntry = new Diary({
+      owner,
+      date,
+    });
+  }
+
+  const existingProduct = diaryEntry.products.find(
+    product => product.productId.toString() === productId
+  );
+
   if (existingProduct) {
     throw HttpError(400, 'product is already added');
   }
 
-  const diaryEntry = await Diary.findOneAndUpdate(
-    { owner: _id },
-    {
-      $push: {
-        products: {
-          productId,
-          amount,
-        },
-      },
-    },
-    { new: true, upsert: true }
-  );
+  diaryEntry.products.push({
+    productId,
+    amount,
+  });
+
+  diaryEntry = await diaryEntry.save();
 
   res.status(201).json(diaryEntry);
 };
 
 const deleteProduct = async (req, res) => {
-  const { id } = req.body;
-  // const { _id } = req.user;
-  const _id = '65a29de0fe46bdf5bbb31e17';
+  const { id, date } = req.body;
+  const { _id: owner } = req.user;
 
   const diaryEntry = await Diary.findOneAndUpdate(
-    { owner: _id, 'products.productId': id },
+    {
+      owner,
+      date,
+      'products.productId': id,
+    },
     {
       $pull: {
         products: { productId: id },
@@ -66,47 +78,55 @@ const deleteProduct = async (req, res) => {
   );
 
   if (!diaryEntry) {
-    throw HttpError(404, 'Diary entry not found');
+    throw HttpError(404, 'product ID not found in this collection');
   }
 
   res.status(200).json('Product deleted successfully');
 };
 
 const addExercise = async (req, res) => {
-  const { exerciseId } = req.body;
-  // const { _id } = req.user;
-  const _id = '65a29de0fe46bdf5bbb31e17';
+  const { exerciseId, date } = req.body;
+  const { _id: owner } = req.user;
 
-  const existingExercise = await Diary.findOne({
-    owner: _id,
-    'exercises.exerciseId': exerciseId,
+  let diaryEntry = await Diary.findOne({
+    owner,
+    date,
   });
+
+  if (!diaryEntry) {
+    diaryEntry = new Diary({
+      owner,
+      date,
+    });
+  }
+
+  const existingExercise = diaryEntry.exercises.find(
+    exercise => exercise.exerciseId.toString() === exerciseId
+  );
+
   if (existingExercise) {
     throw HttpError(400, 'exercise is already added');
   }
 
-  const diaryEntry = await Diary.findOneAndUpdate(
-    { owner: _id },
-    {
-      $push: {
-        exercises: {
-          exerciseId,
-        },
-      },
-    },
-    { new: true, upsert: true }
-  );
+  diaryEntry.exercises.push({
+    exerciseId,
+  });
+
+  diaryEntry = await diaryEntry.save();
 
   res.status(201).json(diaryEntry);
 };
 
 const deleteExercise = async (req, res) => {
-  const { id } = req.body;
-  // const { _id } = req.user;
-  const _id = '65a29de0fe46bdf5bbb31e17';
+  const { id, date } = req.body;
+  const { _id: owner } = req.user;
 
   const diaryEntry = await Diary.findOneAndUpdate(
-    { owner: _id, 'exercises.exerciseId': id },
+    {
+      owner,
+      date,
+      'exercises.exerciseId': id,
+    },
     {
       $pull: {
         exercises: { exerciseId: id },
@@ -116,7 +136,7 @@ const deleteExercise = async (req, res) => {
   );
 
   if (!diaryEntry) {
-    throw HttpError(404, 'Diary entry not found');
+    throw HttpError(404, 'exercise ID not found in this collection');
   }
 
   res.status(200).json('Exercise deleted successfully');
