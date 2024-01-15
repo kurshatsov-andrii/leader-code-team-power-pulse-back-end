@@ -211,8 +211,6 @@
       },
       "RegistrationResponse": {
         "type": "object",
-        "items": {
-          "type": "object",
           "properties": {
 							"name": {
 								"type": "string",
@@ -223,8 +221,7 @@
               "description": "User email",
               "format": "email"
             }
-          }
-        }
+          }        
       },
       "LoginRequest": {
 				"type": "object",
