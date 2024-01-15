@@ -2,15 +2,43 @@ require('dotenv').config();
 const { Product } = require('../models/products');
 const { HttpError, ctrlWrapper } = require('../helpers');
 
-const getAllCategories = async (req, res) => {
-  //   const { categories } = req.Product;
-  const result = await Product.find();
-  if (!result) {
-    throw HttpError(404, 'Not found');
-  }
-  res.json(result);
+const getAllProducts = async (req, res) => {
+  const {
+    title = null,
+    category = null,
+    recomended = null,
+    page = 1,
+    limit = 24,
+  } = req.query;
+  const skip = (page - 1) * limit;
 
-  //   res.status(500).json({ message: "Connect Server Error" });
+  const mainQuery = {};
+
+  title && (mainQuery.title = { $regex: title.trim(), $options: 'i' });
+  category && (mainQuery.category = { $regex: category.trim(), $options: 'i' });
+
+  if (recomended) {
+    const { userParams } = req.user;
+
+    if (!userParams) {
+      throw HttpError(404, 'Not found');
+    }
+
+    mainQuery[`groupBloodNotAllowed.${userParams.blood}`] =
+      recomended === 'true' ? 'false' : 'true';
+  }
+
+  const data = await Product.find(mainQuery).skip(skip).limit(limit);
+
+  const sum = await Product.countDocuments(mainQuery);
+
+  res.status(200).json({ data, page: +page, limit: +limit, sum });
+
+  // const result = await Product.find();
+  // if (!result) {
+  //   throw HttpError(404, 'Not found');
+  // }
+  // res.json(result);
 };
 
 const getProductByBloodGroup = async (req, res) => {
@@ -34,6 +62,6 @@ const getProductByBloodGroup = async (req, res) => {
   res.json(filteredProductsByBloodGroup);
 };
 module.exports = {
-  getAllCategories: ctrlWrapper(getAllCategories),
+  getAllProducts: ctrlWrapper(getAllProducts),
   getProductByBloodGroup: ctrlWrapper(getProductByBloodGroup),
 };
