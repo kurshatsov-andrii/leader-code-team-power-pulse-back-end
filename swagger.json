@@ -209,21 +209,26 @@
           }
         }
       },
-      "RegistrationResponse": {
-        "type": "object",
-          "properties": {
+"RegistrationResponse": {
+				"type": "object",
+				"properties": {
+					"user": {
+						"type": "object",
+						"properties": {
 							"name": {
 								"type": "string",
 								"description": "User name"
 							},
-            "email": {
-              "type": "string",
-              "description": "User email",
-              "format": "email"
-            }
-          }        
-      },
-      "LoginRequest": {
+							"email": {
+								"type": "string",
+								"description": "User email",
+								"format": "email"
+							}
+						}	
+					}
+				}
+			},     
+			"LoginRequest": {
 				"type": "object",
 				"required": ["email", "password"],
 				"properties": {
@@ -248,7 +253,8 @@
 					},
 					"email": {						
 						"type": "string",
-						"description": "User email"											
+						"description": "User email",
+						"format": "email"											
 					}					 
 				}
 			},
