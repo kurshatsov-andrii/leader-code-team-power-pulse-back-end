@@ -12,7 +12,7 @@ const register = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (user) {
-      throw HttpError(409);
+      throw HttpError(409, 'Email in use');
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
@@ -79,9 +79,15 @@ const logout = async (req, res, next) => {
 const addUserData = async (req, res, next) => {
   try {
     const { email } = req.user;
-    const updatedData = await User.findOneAndUpdate({ email }, req.body, {
-      new: true,
-    });
+    const updatedData = await User.findOneAndUpdate(
+      { email },
+
+      req.body,
+
+      {
+        new: true,
+      }
+    );
 
     const { desiredWeight, height, birthday, sex, levelActivity } = updatedData;
 
@@ -107,10 +113,25 @@ const addUserData = async (req, res, next) => {
   }
 };
 
+const updateAvatar = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const avatarURL = req.file.path;
+
+    console.log(avatarURL);
+
+    await User.findByIdAndUpdate(_id, { avatarURL }, { new: true });
+    res.status(200).json({ avatarURL });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   register,
   login,
   getCurrent,
   logout,
   addUserData,
+  updateAvatar,
 };
