@@ -37,7 +37,7 @@
         },
         "responses": {
           "201": {
-            "description": "Successful operation",
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
@@ -57,7 +57,7 @@
           }
         },
           "409": {
-            "description": "Email in use",
+            "description": "Conflict (Email in use)",
             "content": {
 							"application/json": {
 								"schema": {
@@ -87,7 +87,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Successful operation",
+						"description": "ОК",
 						"content": {
 						  "application/json": {
 							 "schema": {
@@ -96,8 +96,18 @@
 						  }
 						}
 					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}						
+					},
 					"401": {
-						"description": "Unauthorized",
+						"description": "Email or password is wrong",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -113,12 +123,13 @@
 			"get": {
 				"tags": ["Auth"],
 				"summary": "Current user",
+				"description": "Endpoint for get current user's information",
 				"parameters": [],
 				"security": [{ "Bearer": [] }],
 				"requestBody": {},
 				"responses": {
 				"200": {
-						"description": "Successful operation",
+						"description": "OK",
 						"content": {
 						  "application/json": {
 							 "schema": {
@@ -147,31 +158,10 @@
 				"summary": "User logout",
 				"parameters": [],
 				"security": [{ "Bearer": [] }],
-				"requestBody": {
-					"description": "Logout object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/LogoutRequest"
-							}
-						}
-					}
-				},
-				"200": {
-						"description": "Successful operation",
-						"content": {
-						  "application/json": {
-							 "schema": {
-								"$ref": "#/components/schemas/CurrentResponse"
-							 }
-						  }
-						}
-					},
-
+				"description": "Endpoint for logout current user",					
 				"responses": {
-					"204": {
-						"description": "No Content",
+				"200": {
+						"description": "ОК",
 						"content": {
 						  "application/json": {
 							 "schema": {
@@ -180,6 +170,7 @@
 						  }
 						}
 					},
+
 					"401": {
 						"description": "Unauthorized",
 						"content": {
@@ -189,17 +180,8 @@
 								}
 							 }
 						}
-					},
-					"404": {
-						"description": "Not Found",
-						"content": {
-							"application/json": {
-								"schema": {
-								  "$ref": "#/components/schemas/ErrorResponse"
-								}
-							 }
-						}
 					}
+					
 				}
 			}
 		}
@@ -228,7 +210,7 @@
         }
       },
       "RegistrationResponse": {
-        "type": "array",
+        "type": "object",
         "items": {
           "type": "object",
           "properties": {
@@ -240,11 +222,7 @@
               "type": "string",
               "description": "User email",
               "format": "email"
-            },
-					"message": {
-						"type": "string",
-						"description": "Message"
-					  } 
+            }
           }
         }
       },
@@ -271,29 +249,10 @@
 						"type": "string",
 						"description": "User token"
 					},
-					"user": {
-						"type": "object",
-						"properties": {
-							"name": {
-								"type": "string",
-								"description": "User name"
-							},
-							"email": {
-								"type": "string",
-								"description": "User email"
-							}
-						}	
-					}					 
-				}
-			},
-			"LogoutRequest": {
-				"type": "object",
-				"required": ["_id"],
-				"properties": {
-					"_id": {
+					"email": {						
 						"type": "string",
-						"description": "User id"
-					}
+						"description": "User email"											
+					}					 
 				}
 			},
 "LogoutResponse": {
@@ -302,14 +261,17 @@
 					"message": {
 						"type": "string",
 						"description": "Message",
-						"example": "logout was successful"
+						"example": "Logout success"
 					}
 				}
 			},			
 			"CurrentResponse": {
-				"type": "object",
-				"required": ["name", "email"],
+				"type": "object",				
 				"properties": {
+				"_Id": {
+        "type": "string",
+        "example": "6540e173fcec8c3a63bbd7b4"
+      },
 					"name": {
 						"type": "string",
 						"description": "User name"
@@ -318,7 +280,70 @@
 						"type": "string",
 						"description": "User email",
 						"format": "email"
-					}
+					},
+ 			"password": {
+        "type": "string",
+        "description": "User's password",
+        "example": "qwerty123"
+      },					
+"height": {
+            "type": "integer",
+            "description": "User's height",
+            "example": 180
+          },
+          "currentWeight": {
+            "type": "integer",
+            "description": "User's current weight",
+            "example": 90
+          },
+          "desiredWeight": {
+            "type": "integer",
+            "description": "User's desired weight",
+            "example": 70
+          },
+          "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "2023-10-22"
+          },
+          "blood": {
+            "type": "number",
+            "description": "User's blood type",
+            "example": 1
+          },
+          "sex": {
+            "type": "string",
+            "description": "User's sex",
+            "example": "male"
+          },
+          "levelActivity": {
+            "type": "number",
+            "description": "User's level activity",
+            "example": 1
+          },
+				"bmr": {
+        "type": "number",
+        "description": "User's BMR",
+        "example": 2200
+      },
+    "token": {
+        "type": "string",
+        "description": "User's token",
+        "format": "token",
+        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1M2QzYmM1MDY2NWEyZWZlNmU4YzhmMyIsImlhdCI6MTY5ODkxNjA2NCwiZXhwIjoxNjk4OTk4ODY0fQ.1sRQ0J4lbJHKmL9X2feV71DbiKTxab6J_nK2giFhURc"
+      },    
+		"createdAt": {
+        "type": "string",
+        "description": "Time when user was created at",
+        "format": "Time",
+        "example": "2023-10-22T18:43:34.175Z"
+      },
+    "updatedAt": {
+        "type": "string",
+        "description": "Time when user was created at",
+        "format": "Time",
+        "example": "2023-10-22T18:43:34.175Z"
+      } 
 				}
 			},			
 			"ErrorResponse": {
