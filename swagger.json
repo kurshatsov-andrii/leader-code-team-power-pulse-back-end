@@ -14,7 +14,19 @@
     {
       "name": "Auth",
       "description": "Authorization endpoints"
-    }
+    },
+		 {
+      "name": "Products",
+      "description": "Products endpoints"
+    },
+		{
+       "name": "Exercises",
+       "description": "Exercises endpoints"
+        },
+		{
+       "name": "Diary",
+       "description": "Diary endpoints"
+        }
   ],
   "paths": {
     "/api/auth/register": {
@@ -295,8 +307,270 @@
           }
         }
       }
-	}
-  },
+	},	
+		"/products": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Return all products",
+        "operationId": "getAllProducts",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Items per page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 24
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Choose name of product",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recommended",
+            "in": "query",
+            "description": "Choose recommended or not recommended products",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },					
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Choose category of products",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "alcoholic drinks",
+                "berries",
+                "cereals",
+                "dairy",
+                "dried fruits",
+                "eggs",
+                "fish",
+                "flour",
+                "fruits",
+                "meat",
+                "mushrooms",
+                "nuts",
+                "oils and fats",
+                "poppy",
+                "sausage",
+                "seeds",
+                "sesame",
+                "soft drinks",
+                "vegetables and herbs"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductsResponse"
+                }
+              }
+            }
+          },
+
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/category": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Return all products categories",
+        "operationId": "getProductsCategories",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductsCategoriesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+"/exercises/{filter}": {
+            "get": {
+                "tags": [
+                    "Exercises"
+                ],
+                "summary": "Grouped categories",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [									
+                    {
+											"required": true,
+                        "in": "path",
+                        "name": "filter",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "body-part",
+                                "muscles",
+                                "equipment"
+                            ]
+                        },
+                        "description": "Prefilter parameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExercisesResponse"
+                                }
+                            }
+                        }
+                    },
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					},
+					"404": {
+						"description": "Page not found",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}						
+					}                }
+            }
+        },		
+  
+		"/getDiary": {
+			"get": {
+				"tags": ["Diary"],
+				"summary": "Get added products",
+				"security": [{ "Bearer": [] }],
+				"parameters": [],
+								"requestBody": {
+					"description": "Diary object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DairyGetRequest"
+							}
+						}
+					}
+				},				
+				"responses":{
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/DiaryGetProductsResponse"
+							 }
+						   }
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					}
+
+				}
+			}
+		}
+	},	
   "components": {
     "schemas": {
       "RegistrationRequest": {
@@ -519,7 +793,175 @@
 					}      
           
         }
-      },			
+      },		
+		"ProductsResponse": {
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+        					"example": "6540e173fcec8c3a63bbd7b4"
+                },
+                "weight": {
+                  "type": "number",
+        					"example": 100
+                },
+                "calories": {
+ 									"type": "integer",
+        					"example": 225
+                },
+                "category": {
+                  "type": "string",
+        					"example": "flour"
+                },
+                "title": {
+                  "type": "string",
+        					"example": "Cedar flour"
+                },
+                "groupBloodNotAllowed": {
+                  "type": "object",
+        "properties": {
+          "1": {
+            "type": "boolean"
+          },
+          "2": {
+            "type": "boolean"
+          },
+          "3": {
+            "type": "boolean"
+          },
+          "4": {
+            "type": "boolean"
+          }
+        }
+                }
+              }
+            }
+          },
+          "page": {
+            "type": "integer",
+        		"example": 1
+          },
+          "limit": {
+						"type": "integer",
+        		"example": 24
+          },
+          "sum": {
+            "type": "integer",
+        		"example": 2621
+          }
+        }
+      },
+
+      "ProductsCategoriesResponse": {
+				"type": "object",
+        "properties": { 
+					"category": {
+            "type": "array",
+            "items":       
+        	{
+          	"type": "array",
+          	"example": "fish"
+        }
+			}
+
+        }
+			
+      },	
+"ExercisesResponse": {
+                "type": "object",
+                "description": "Total count of elements in filtered collection",
+                "properties": {
+                    "length": {
+                        "type": "integer"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "_id": {
+                                    "type": "string"
+                                },
+                                "filter": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "imgURL": {
+                                    "type": "string",
+                                    "format": "uri"
+                                }
+                            }
+                        }
+                    }
+                }
+            },		
+"DiaryGetProductsResponse": {				
+					"type": "object",
+					"properties": {
+						"_id": {
+							"type": "string",
+							"description": "Body part id"
+						},
+						"owner": {
+							"type": "string",
+							"description": "Owner part id"
+						},
+						"date": {
+							"type": "string",
+							"description": "Date",
+							"format": "date"
+						},
+						"consumedCalories": {
+							"type": "string",
+							"description": "Consumed Calories"
+						},
+						"burnedCalories": {
+							"type": "string",
+							"description": "Burned Calories"
+						},
+					"products": {
+            "type": "array",
+            "items": {
+						}
+					},
+						"exercises": {
+            "type": "array",
+            "items": {
+						}
+					},
+"createdAt": {
+        "type": "string",
+        "description": "Time when user was created at",
+        "format": "Time",
+        "example": "2023-10-22T18:43:34.175Z"
+      },
+    "updatedAt": {
+        "type": "string",
+        "description": "Time when user was created at",
+        "format": "Time",
+        "example": "2023-10-22T18:43:34.175Z"
+      }					
+					}				
+			},	
+			"DairyGetRequest": {
+				"type": "object",
+				"required": ["data"],
+				"properties": {
+					"data": {
+						"type": "string",
+						"description": "User data",
+						"format": "date"
+					}
+				}
+			},
+
 			"ErrorResponse": {
 				"type": "object",
 				"properties": {
