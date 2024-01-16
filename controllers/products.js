@@ -3,34 +3,7 @@ const { Product } = require('../models/products');
 const { HttpError, ctrlWrapper } = require('../helpers');
 const { User } = require('../models/user');
 
-const getAllProducts = async (req, res) => {
-  const { page = 1, limit = 24 } = req.query;
-  const skip = (page - 1) * limit;
-
-  try {
-    const result = await Product.find().skip(skip).limit(limit);
-
-    if (!result || result.length === 0) {
-      throw HttpError(404, 'No categories found.');
-    }
-
-    res.json({
-      data: result,
-      page: +page,
-      limit: +limit,
-      total: await Product.countDocuments(),
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getProductsCategory = async (req, res) => {
-  const result = await Product.distinct('category');
-  res.json(result);
-};
-
-const getProductFilter = async (req, res) => {
+const getAllProductsWithFilter = async (req, res) => {
   const { category, search, recommended } = req.query;
   const data = {};
 
@@ -87,9 +60,11 @@ const getProductFilter = async (req, res) => {
     products,
   });
 };
-
+const getProductsCategory = async (req, res) => {
+  const result = await Product.distinct('category');
+  res.json(result);
+};
 module.exports = {
-  getAllProducts: ctrlWrapper(getAllProducts),
+  getAllProductsWithFilter: ctrlWrapper(getAllProductsWithFilter),
   getProductsCategory: ctrlWrapper(getProductsCategory),
-  getProductFilter: ctrlWrapper(getProductFilter),
 };
