@@ -1,115 +1,24 @@
 require('dotenv').config();
 const { Product } = require('../models/products');
 const { HttpError, ctrlWrapper } = require('../helpers');
+const { User } = require('../models/user');
 
 const getAllProducts = async (req, res) => {
-  const {
-    title = null,
-    category = null,
-    recommended = null,
-    page = 1,
-    limit = 24,
-  } = req.query;
+  const { page = 1, limit = 24 } = req.query;
   const skip = (page - 1) * limit;
 
-  const mainQuery = {};
-
-  title && (mainQuery.title = { $regex: title.trim(), $options: 'i' });
-  category && (mainQuery.category = { $regex: category.trim(), $options: 'i' });
-
-  if (recommended) {
-    const { userParams } = req.user;
-
-    if (!userParams) {
-      throw HttpError(404, 'Not found');
-    }
-
-    mainQuery[`groupBloodNotAllowed.${userParams.blood}`] =
-      recommended === 'true' ? 'false' : 'true';
-  }
-
-  const data = await Product.find(mainQuery).skip(skip).limit(limit);
-
-  const sum = await Product.countDocuments(mainQuery);
-
-  res.status(200).json({ data, page: +page, limit: +limit, sum });
-};
-
-const getProductByBloodGroup = async (req, res) => {
-  const { blood } = req.user;
-  const recomended = req.query.recomended;
-
-  const query = {};
-
-  if (recomended !== undefined) {
-    const isRecomended = JSON.parse(recomended);
-
-    if (isRecomended) {
-      query[`groupBloodNotAllowed.${blood}`] = false;
-    } else {
-      query[`groupBloodNotAllowed.${blood}`] = true;
-    }
-  }
-
-  const filteredProductsByBloodGroup = await Product.find(query);
-
-  res.json(filteredProductsByBloodGroup);
-};
-
-const getAllowed = async (req, res, next) => {
   try {
-    const blood = parseInt(req.query.blood, 10);
+    const result = await Product.find().skip(skip).limit(limit);
 
-    const validBloodGroups = [1, 2, 3, 4];
-    if (!validBloodGroups.includes(blood)) {
-      throw HttpError(
-        400,
-        'Invalid blood group, it should be a number one of 1, 2, 3, 4'
-      );
-    }
-
-    const result = await Product.find({
-      [`groupBloodNotAllowed.${blood}`]: false,
-    });
-
-    if (!result) {
-      throw HttpError(404, 'Not Found!');
+    if (!result || result.length === 0) {
+      throw HttpError(404, 'No categories found.');
     }
 
     res.json({
-      status: 'List of allowed products',
-      code: 200,
       data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getForbiden = async (req, res, next) => {
-  try {
-    const blood = parseInt(req.query.blood, 10);
-
-    const validBloodGroups = [1, 2, 3, 4];
-    if (!validBloodGroups.includes(blood)) {
-      throw HttpError(
-        400,
-        'Invalid blood group, it should be a number one of 1, 2, 3, 4'
-      );
-    }
-
-    const result = await Product.find({
-      [`groupBloodNotAllowed.${blood}`]: true,
-    });
-
-    if (!result) {
-      throw HttpError(404, 'Not Found!');
-    }
-
-    res.json({
-      status: 'List of forbidden products',
-      code: 200,
-      data: result,
+      page: +page,
+      limit: +limit,
+      total: await Product.countDocuments(),
     });
   } catch (error) {
     next(error);
@@ -121,22 +30,62 @@ const getProductsCategory = async (req, res) => {
   res.json(result);
 };
 
-const getProductById = async (req, res, next) => {
-  try {
-    const { productId } = req.params;
-    const result = await Product.findById(productId);
+const getProductFilter = async (req, res) => {
+  const { category, search, recommended } = req.query;
+  const data = {};
 
-    if (!result) {
-      throw HttpError(404, 'Not Found product by that id');
-    }
-    res.json({
-      status: 'success',
-      code: 200,
-      data: result,
-    });
-  } catch (error) {
-    next(error);
+  if (category) {
+    data.category = category;
   }
+  if (search) {
+    data.title = { $regex: search, $options: 'i' };
+  }
+
+  if (recommended) {
+    const { user: id } = req;
+    const user = await User.findById(id);
+    const bloodGroup = user.blood;
+
+    if (!bloodGroup) {
+      console.log('There are na information about your blood group');
+    }
+
+    if (recommended === 'true') {
+      data[`groupBloodNotAllowed.${bloodGroup}`] = true;
+    } else {
+      data[`groupBloodNotAllowed.${bloodGroup}`] = false;
+    }
+  }
+
+  const blood = parseInt(req.query.blood, 10);
+  if (!isNaN(blood)) {
+    const validBloodGroups = [1, 2, 3, 4];
+    if (!validBloodGroups.includes(blood)) {
+      throw HttpError(
+        400,
+        'Invalid blood group, it should be a number one of 1, 2, 3, 4'
+      );
+    }
+
+    data[`groupBloodNotAllowed.${blood}`] = false;
+  }
+
+  const { page = 1, limit = 24 } = req.query;
+  const sum = await Product.find(data).count();
+  const products = await Product.find(data)
+    .limit(limit)
+    .skip(limit * (page - 1));
+
+  if (!products) {
+    throw HttpError(errorType.BAD_REQUEST);
+  }
+
+  res.json({
+    sum,
+    page,
+    limit,
+    products,
+  });
 };
 
 module.exports = {
@@ -146,4 +95,5 @@ module.exports = {
   getForbiden: ctrlWrapper(getForbiden),
   getProductsCategory: ctrlWrapper(getProductsCategory),
   getProductById: ctrlWrapper(getProductById),
+  getProductFilter: ctrlWrapper(getProductFilter),
 };
