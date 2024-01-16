@@ -9,8 +9,6 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
   "servers": [{"url": "https://leader-code-team-power-pulse-back-end.onrender.com/"}, { "url": "http://localhost:3002" }],
   "tags": [
     {
@@ -123,10 +121,9 @@
 			"get": {
 				"tags": ["Auth"],
 				"summary": "Current user",
-				"description": "Endpoint for get current user's information",
+				"description": "Endpoint for get current user information",
 				"parameters": [],
-				"security": [{ "Bearer": [] }],
-				"requestBody": {},
+				"security": [{ "Bearer": [] }],				
 				"responses": {
 				"200": {
 						"description": "OK",
@@ -184,8 +181,121 @@
 					
 				}
 			}
-		}
+		},
+"/api/auth/profile": {
+			"patch": {
+				"tags": ["Auth"],
+				"summary": "User update",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"description": "Endpoint for user update",					
+				"requestBody": {
+					"description": "Profile object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ProfileRequest"
+							}
+						}
+					}
+				},				
+				"responses": {
+				"201": {
+						"description": "Updated",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/CurrentResponse"
+							 }
+						  }
+						}
+					},
 
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					},
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }					
+				}
+			}
+		},		
+	"/api/auth/avatar": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "User update avatar",
+        "description": "Endpoint for updating the user avatar",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "User avatar",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "avatar": { "contentType": "image" }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvatarResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+	}
   },
   "components": {
     "schemas": {
@@ -286,52 +396,52 @@
 					},
  			"password": {
         "type": "string",
-        "description": "User's password",
-        "example": "qwerty123"
+        "description": "User password",
+        "example": "$2b$10$Sh95JUAJThmtGHH0BDcewe6I7ZORt1xMS.TN8V/nkU3L1UI81.Ua2"
       },					
-"height": {
+			"height": {
             "type": "integer",
-            "description": "User's height",
+            "description": "User height",
             "example": 180
           },
           "currentWeight": {
             "type": "integer",
-            "description": "User's current weight",
+            "description": "User current weight",
             "example": 90
           },
           "desiredWeight": {
             "type": "integer",
-            "description": "User's desired weight",
+            "description": "User desired weight",
             "example": 70
           },
           "birthday": {
             "type": "string",
-            "description": "User's birthday",
-            "example": "2023-10-22"
+            "description": "User birthday",
+            "example": "1990-01-01T00:00:00.000Z"
           },
           "blood": {
             "type": "number",
-            "description": "User's blood type",
+            "description": "User blood type",
             "example": 1
           },
           "sex": {
             "type": "string",
-            "description": "User's sex",
+            "description": "User sex",
             "example": "male"
           },
           "levelActivity": {
             "type": "number",
-            "description": "User's level activity",
+            "description": "User level activity",
             "example": 1
           },
 				"bmr": {
         "type": "number",
-        "description": "User's BMR",
+        "description": "User BMR",
         "example": 2200
       },
     "token": {
         "type": "string",
-        "description": "User's token",
+        "description": "User token",
         "format": "token",
         "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1M2QzYmM1MDY2NWEyZWZlNmU4YzhmMyIsImlhdCI6MTY5ODkxNjA2NCwiZXhwIjoxNjk4OTk4ODY0fQ.1sRQ0J4lbJHKmL9X2feV71DbiKTxab6J_nK2giFhURc"
       },    
@@ -346,9 +456,70 @@
         "description": "Time when user was created at",
         "format": "Time",
         "example": "2023-10-22T18:43:34.175Z"
-      } 
+      },
+		"avatarURL": {
+				"type": "string",
+				"example": "https://res.cloudinary.com/dyhqa6el3/image/upload/v1705339824/avatars/mark.jpg"
+					}     
+
 				}
-			},			
+			},
+			"ProfileRequest": {
+				"type": "object",
+				"required": ["name", "height", "currentWeight", "desiredWeight", "birthday", "blood", "sex", "levelActivity"],
+				"properties": {
+				"name": {
+						"type": "string",
+						"description": "User name"
+					},          
+				"height": {
+            "type": "integer",
+            "description": "User height",
+            "example": 180
+          },
+          "currentWeight": {
+            "type": "integer",
+            "description": "User current weight",
+            "example": 90
+          },
+          "desiredWeight": {
+            "type": "integer",
+            "description": "User desired weight",
+            "example": 70
+          },
+          "birthday": {
+            "type": "string",
+            "description": "User birthday",
+            "example": "1990-01-01T00:00:00.000Z"
+          },
+          "blood": {
+            "type": "number",
+            "description": "User blood type",
+            "example": 1
+          },
+          "sex": {
+            "type": "string",
+            "description": "User sex",
+            "example": "male"
+          },
+          "levelActivity": {
+            "type": "number",
+            "description": "User level activity",
+            "example": 1
+          }
+				}
+			},
+			"AvatarResponse": {
+        "type": "object",
+				"description": "User avatar",
+        "properties": {                                  
+            "avatarURL": {
+						"type": "string",
+						"example": "https://res.cloudinary.com/dyhqa6el3/image/upload/v1705339824/avatars/mark.jpg"
+					}      
+          
+        }
+      },			
 			"ErrorResponse": {
 				"type": "object",
 				"properties": {
