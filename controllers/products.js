@@ -90,10 +90,6 @@ const getProductFilter = async (req, res) => {
 
 module.exports = {
   getAllProducts: ctrlWrapper(getAllProducts),
-  getProductByBloodGroup: ctrlWrapper(getProductByBloodGroup),
-  getAllowed: ctrlWrapper(getAllowed),
-  getForbiden: ctrlWrapper(getForbiden),
   getProductsCategory: ctrlWrapper(getProductsCategory),
-  getProductById: ctrlWrapper(getProductById),
   getProductFilter: ctrlWrapper(getProductFilter),
 };
