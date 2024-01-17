@@ -22,7 +22,7 @@ router.post(
 router.delete(
   '/deleteProduct',
   authenticate,
-  validateBody(joiSchemas.joiDeleteProductSchema),
+  validateBody(joiSchemas.joiDeleteSchema),
   controller.deleteProduct
 );
 
@@ -36,7 +36,7 @@ router.post(
 router.delete(
   '/deleteExercise',
   authenticate,
-  validateBody(joiSchemas.joiDeleteExerciseSchema),
+  validateBody(joiSchemas.joiDeleteSchema),
   controller.deleteExercise
 );
 
