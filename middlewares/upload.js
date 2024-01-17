@@ -13,6 +13,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
     const folder = 'avatars';
+    file.originalname = req.user._id;
 
     return {
       folder: folder,
