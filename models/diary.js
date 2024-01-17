@@ -27,13 +27,24 @@ const diarySchema = new Schema(
       default: 0,
     },
 
+    physicalActivityTimeDone: {
+      type: Number,
+      default: 0,
+    },
+
     products: [
       {
         productId: {
           type: Schema.Types.ObjectId,
           ref: 'product',
+          required: true,
         },
         amount: {
+          type: Number,
+          required: true,
+          min: 1,
+        },
+        calories: {
           type: Number,
           required: true,
           min: 1,
@@ -46,6 +57,17 @@ const diarySchema = new Schema(
         exerciseId: {
           type: Schema.Types.ObjectId,
           ref: 'exercises',
+          required: true,
+        },
+        time: {
+          type: Number,
+          required: true,
+          min: 1,
+        },
+        calories: {
+          type: Number,
+          required: true,
+          min: 1,
         },
       },
     ],
@@ -66,29 +88,35 @@ const joiGetDiarySchema = Joi.object({
 
 const joiAddProductSchema = Joi.object({
   productId: Joi.string().required(),
-  date: Joi.string().regex(dateFormat).required(),
+  date: Joi.string().regex(dateFormat).required().messages({
+    'string.pattern.base':
+      'Formate date is wrong. Please follow the correct format: dd/mm/YYYY',
+  }),
   amount: Joi.number().min(1).required(),
-});
-const joiDeleteProductSchema = Joi.object({
-  id: Joi.string().required(),
-  date: Joi.string().regex(dateFormat).required(),
 });
 
 const joiAddExerciseSchema = Joi.object({
   exerciseId: Joi.string().required(),
-  date: Joi.string().regex(dateFormat).required(),
+  date: Joi.string().regex(dateFormat).required().messages({
+    'string.pattern.base':
+      'Formate date is wrong. Please follow the correct format: dd/mm/YYYY',
+  }),
+  time: Joi.number().min(1).required(),
 });
-const joiDeleteExerciseSchema = Joi.object({
+
+const joiDeleteSchema = Joi.object({
   id: Joi.string().required(),
-  date: Joi.string().regex(dateFormat).required(),
+  date: Joi.string().regex(dateFormat).required().messages({
+    'string.pattern.base':
+      'Formate date is wrong. Please follow the correct format: dd/mm/YYYY',
+  }),
 });
 
 const joiSchemas = {
   joiGetDiarySchema,
   joiAddProductSchema,
-  joiDeleteProductSchema,
   joiAddExerciseSchema,
-  joiDeleteExerciseSchema,
+  joiDeleteSchema,
 };
 
 module.exports = {
