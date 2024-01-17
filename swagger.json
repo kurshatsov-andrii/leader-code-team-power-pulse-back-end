@@ -467,12 +467,59 @@
         }
       }
     },
+		"/exercises": {
+      "get": {
+        "tags": ["Exercises"],
+        "summary": "Return all exercises",
+        "operationId": "getAllExercises",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllExercisesResponse"
+                }
+              }
+            }
+          },
+
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
 "/exercises/{filter}": {
             "get": {
                 "tags": [
                     "Exercises"
                 ],
-                "summary": "Grouped categories",
+                "summary": "Return exercises categories",
                 "security": [
                     {
                         "Bearer": []
@@ -857,21 +904,68 @@
         }
       },
 
-      "ProductsCategoriesResponse": {
-				"type": "object",
-        "properties": { 
-					"category": {
+      "ProductsCategoriesResponse": {				
             "type": "array",
-            "items":       
-        	{
-          	"type": "array",
-          	"example": "fish"
-        }
-			}
-
-        }
-			
+            "items": {
+              "type": "object",
+              "properties": {                     
+                "_id": {
+                  "type": "string",
+        					"example": "6540e173fcec8c3a63bbd7b4"
+                },
+                "category": {
+                  "type": "string",
+        					"example": "fish"
+                }          
+             }
+          }              			
       },	
+"AllExercisesResponse": {
+                "type": "object",
+                "description": "Total count of elements in filtered collection",
+                "properties": {
+                    "length": {
+                        "type": "integer"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "_id": {
+                                    "type": "string"
+                                },
+                                "bodyPart": {
+                                    "type": "string"
+                                },
+                                "equipment": {
+                                    "type": "string"
+                                },
+                                "gifUrl": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "example": "https://ftp.goit.study/img/power-pulse/gifs/0009.gif"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "target": {
+                                    "type": "string"
+                                },
+                              "burnedCalories": {
+						                  "type": "integer",
+        		          "example": 329
+                          },
+          "time": {
+            "type": "integer",
+        		"example": 3
+          }
+
+                            }
+                        }
+                    }
+                }
+            },      
 "ExercisesResponse": {
                 "type": "object",
                 "description": "Total count of elements in filtered collection",
@@ -895,13 +989,14 @@
                                 },
                                 "imgURL": {
                                     "type": "string",
-                                    "format": "uri"
+                                    "format": "uri",
+"example": "https://ftp.goit.study/img/power-pulse/gifs/0009.gif"                                    
                                 }
                             }
                         }
                     }
                 }
-            },		
+            },            		
 "DiaryGetProductsResponse": {				
 					"type": "object",
 					"properties": {
