@@ -574,11 +574,235 @@
 					}                }
             }
         },		
-  
-		"/getDiary": {
+  "/diary/addProduct": {
+			"post": {
+				"tags": ["Diary"],
+				"summary": "Add product",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {
+					"description": "Add product by id",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DiaryAddProductsRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/DiaryAddProductsResponse"
+							 }
+						   }
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					},
+					"404": {
+						"description": "Page not found",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}						
+					},          
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+"/diary/deleteProduct": {
+			"delete": {
+				"tags": ["Diary"],
+				"summary": "Delete product",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {
+					"description": "Delete product by id",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DiaryDeleteProductsRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/DiaryDeleteProductsResponse"
+							 }
+						   }
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					},
+					"404":{
+						"description": "Not found",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/ErrorResponse"
+							 }
+						   }
+						}
+					}
+				}
+			}
+		},    
+"/diary/addExercise": {
+			"post": {
+				"tags": ["Diary"],
+				"summary": "Add exercise",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {
+					"description": "Add exercise by id",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DiaryAddExerciseRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/DiaryAddProductsResponse"
+							 }
+						   }
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					},
+					"404": {
+						"description": "Page not found",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}						
+					},          
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+"/diary/deleteExercise": {
+			"delete": {
+				"tags": ["Diary"],
+				"summary": "Delete exercise",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {
+					"description": "Delete exercise by id",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DiaryDeleteExerciseRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/DiaryDeleteExerciseResponse"
+							 }
+						   }
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					},
+					"404":{
+						"description": "Not found",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/ErrorResponse"
+							 }
+						   }
+						}
+					}
+				}
+			}
+		},    
+	    
+		"/diary/getDiary": {
 			"get": {
 				"tags": ["Diary"],
-				"summary": "Get added products",
+				"summary": "Get added products and exercises",
 				"security": [{ "Bearer": [] }],
 				"parameters": [],
 								"requestBody": {
@@ -598,7 +822,7 @@
 						"content": {
 						  "application/json": {
 							 "schema": {
-								"$ref": "#/components/schemas/DiaryGetProductsResponse"
+								"$ref": "#/components/schemas/DiaryAddProductsResponse"
 							 }
 						   }
 						}
@@ -889,13 +1113,13 @@
         "type": "string",
         "description": "Time when user was created at",
         "format": "Time",
-        "example": "2023-10-22T18:43:34.175Z"
+        "example": "2024-01-17T18:43:34.175Z"
       },
     "updatedAt": {
         "type": "string",
         "description": "Time when user was created at",
         "format": "Time",
-        "example": "2023-10-22T18:43:34.175Z"
+        "example": "2024-01-17T18:43:34.175Z"
       },
 		"avatarURL": {
 				"type": "string",
@@ -1074,63 +1298,185 @@
                         }
                     }
                 }
-            },            		
-"DiaryGetProductsResponse": {  				
-					"type": "object",
-					"properties": {
-						"_id": {
-							"type": "string",
-							"description": "Body part id"
-						},
-						"owner": {
-							"type": "string",
-							"description": "Owner part id"
-						},
-						"date": {
-							"type": "string",
-							"description": "Date",
-							"format": "date"
-						},
-						"consumedCalories": {
-							"type": "string",
-							"description": "Consumed Calories"
-						},
-						"burnedCalories": {
-							"type": "string",
-							"description": "Burned Calories"
-						},
-					"products": {
+            },       
+"DiaryAddProductsRequest": {
+				"type": "object",
+				"required": ["productId", "date", "amount"],
+				"properties": {
+					"productId": {
+						"type": "string",
+						"description": "Product id",
+            "example": "6540e173fcec8c3a63bbd7b5"
+					},
+					"amount": {
+						"type": "number",
+						"description": "Number of grams",
+						"example": "10"						
+					},				
+					"date": {
+						"type": "string",
+						"description": "Date added product",
+						"example": "DD/MM/YYYY"
+					}
+				}
+			},    
+"DiaryAddExerciseRequest": {
+				"type": "object",
+				"required": ["exerciseId", "date"],
+				"properties": {
+					"exerciseId": {
+						"type": "string",
+						"description": "Exercise id",
+            "example": "6540e173fcec8c3a63bbd7b5"
+					},
+					"date": {
+						"type": "string",
+						"description": "Date added exercise",
+						"example": "DD/MM/YYYY"
+					}
+				}
+			},    
+
+"DiaryAddProductsResponse": {
+				"type": "object",
+				"properties": {
+					"owner": {
+						"type": "string",
+						"description": "Owner",
+            "example": "6540e173fcec8c3a63bbd7b5"            
+					},
+          "date": {
+						"type": "string",
+						"description": "Add date",
+						"example": "dd/mm/yyyy"
+					},
+					"consumedCalories": {
+						"type": "number",
+						"description": "Calories consumed"
+					},
+					"burnedCalories": {
+						"type": "number",
+						"description": "Calories burned"
+					},
+				"_id": {
+						"type": "string",
+						"description": "Product id",
+            "example": "6540e173fcec8c3a63bbd7b1"
+					},
+          "products": {
             "type": "array",
             "items": {
-						}
+              "type": "object",
+              "properties": {
+					"productId": {
+						"type": "string",
+						"description": "Product id"
 					},
-						"exercises": {
+					"amount": {
+						"type": "number",
+						"description": "Number of grams",
+						"example": "10"						
+					},				
+                "_id": {
+                  "type": "string",
+        					"example": "6540e173fcec8c3a63bbd7b6"
+                }
+
+              }
+            }
+          },
+          "exercises": {
             "type": "array",
             "items": {
-						}
-					},
-"createdAt": {
+              "type": "object",
+              "properties": {
+                "exerciseId": {
+                  "type": "string",
+        					"example": "6540e173fcec8c3a63bbd7b8"
+                },
+                "_id": {
+                  "type": "string",
+        					"example": "6540e173fcec8c3a63bbd7b2"
+                }
+              }
+            }
+          },
+
+
+		"createdAt": {
         "type": "string",
         "description": "Time when user was created at",
         "format": "Time",
-        "example": "2023-10-22T18:43:34.175Z"
+        "example": "2024-01-17T18:43:34.175Z"
       },
     "updatedAt": {
         "type": "string",
         "description": "Time when user was created at",
         "format": "Time",
-        "example": "2023-10-22T18:43:34.175Z"
-      }					
-					}				
-			},	
+        "example": "2024-01-17T18:43:34.175Z"
+      }
+
+				}
+			},                   		
+"DiaryDeleteProductsRequest": {
+				"type": "object",
+				"required": ["id", "date"],
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "Product id",
+            "example": "6540e173fcec8c3a63bbd7b2"            						
+					},
+					"date": {
+						"type": "string",
+						"example": "DD/MM/YYYY"
+					}
+				}
+			},
+"DiaryDeleteProductsResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "Product deleted successfully",
+            "example": "Product deleted successfully" 
+					}
+				}
+			},      
+"DiaryDeleteExerciseRequest": {
+				"type": "object",
+				"required": ["exerciseId", "date"],
+				"properties": {
+					"exerciseId": {
+						"type": "string",
+						"description": "Exercise id",
+            "example": "6540e173fcec8c3a63bbd7b2"            						
+					},
+					"date": {
+						"type": "string",
+						"example": "DD/MM/YYYY"
+					}
+				}
+			},
+"DiaryDeleteExerciseResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "Exercise deleted successfully",
+            "example": "Exercise deleted successfully" 
+					}
+				}
+			},      
+
 			"DairyGetRequest": {
 				"type": "object",
-				"required": ["data"],
+				"required": ["date"],
 				"properties": {
-					"data": {
+					"date": {
 						"type": "string",
-						"description": "User data",
-						"format": "date"
+						"description": "User date",
+						"example": "17/01/2024"
 					}
 				}
 			},
