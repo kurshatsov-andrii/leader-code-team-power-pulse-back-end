@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const Joi = require('joi');
 const { handleMongooseError } = require('../helpers');
 
 const productCategorySchema = new Schema({
@@ -34,27 +33,23 @@ productCategorySchema.post('save', handleMongooseError);
 
 const Product = model('product', productCategorySchema);
 
-const categorySchema = new Schema({
-  productCategories: Array,
-});
+const categorySchema = new Schema(
+  {
+    name: {
+      type: String,
+      require: [true, 'Define category name'],
+    },
+  },
+  { versionKey: false }
+);
 
-const Category = model('category', categorySchema);
-
-const productValidationSchema = Joi.object({
-  weight: Joi.number().required(),
-  categories: Joi.number().required(),
-  category: Joi.string().required(),
-  title: Joi.string().required(),
-  groupBloodNotAllowed: Joi.object({
-    1: Joi.boolean().required(),
-    2: Joi.boolean().required(),
-    3: Joi.boolean().required(),
-    4: Joi.boolean().required(),
-  }),
-});
+const ProductsCategory = model(
+  'productsCategory',
+  categorySchema,
+  'productsCategories'
+);
 
 module.exports = {
   Product,
-  Category,
-  productValidationSchema,
+  ProductsCategory,
 };
