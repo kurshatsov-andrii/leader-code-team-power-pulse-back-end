@@ -2,13 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { joiSchemas } = require('../../models/diary');
 
-const { validateBody, authenticate } = require('../../middlewares');
+const {
+  validateBody,
+  authenticate,
+  validateParams,
+} = require('../../middlewares');
 const controller = require('../../controllers/diary');
 
 router.get(
-  '/getDiary',
+  '/getDiary/:date',
   authenticate,
-  validateBody(joiSchemas.joiGetDiarySchema),
+  validateParams(joiSchemas.joiGetDiarySchema),
   controller.getDiary
 );
 

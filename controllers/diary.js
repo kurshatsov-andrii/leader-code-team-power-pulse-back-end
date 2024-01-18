@@ -5,7 +5,8 @@ const Exercise = require('../models/exercisesSchema');
 
 const getDiary = async (req, res) => {
   const { _id: owner } = req.user;
-  const { date } = req.body;
+  const { date } = req.params;
+  console.log('date', date);
 
   const diaryEntry = await Diary.findOne({
     owner,
