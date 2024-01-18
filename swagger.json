@@ -602,6 +602,17 @@
 						   }
 						}
 					},
+					"400": {
+						"description": "Format date is wrong",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					},
+
 					"401": {
 						"description": "Unauthorized",
 						"content": {
@@ -613,7 +624,7 @@
 						}
 					},
 					"404": {
-						"description": "Page not found",
+						"description": "Product info not found",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -799,23 +810,23 @@
 			}
 		},    
 	    
-		"/diary/getDiary": {
+		"/diary/getDiary/{date}": {
 			"get": {
 				"tags": ["Diary"],
-				"summary": "Get added products and exercises",
-				"security": [{ "Bearer": [] }],
-				"parameters": [],        
-					"requestBody": {
-					"description": "Diary object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/DairyGetRequest"
-							}
-						}
+				"summary": "Get added products",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "date",
+						"required": true,
+						"description":	"Filter date",
+            "schema": {
+              "type": "string",
+              "default": "DD-MM-YYYY"
+            }
 					}
-				},				
+				],
+				"security": [{ "Bearer": [] }],				
 				"responses":{
 					"200": {
 						"description": "OK",
@@ -826,7 +837,7 @@
 							 }
 						   }
 						}
-					},
+					},		
 					"401": {
 						"description": "Unauthorized",
 						"content": {
@@ -841,7 +852,7 @@
 				}
 			}
 		}
-	},	
+  },	
   "components": {
     "schemas": {
       "RegistrationRequest": {
@@ -1306,7 +1317,7 @@
 					"productId": {
 						"type": "string",
 						"description": "Product id",
-            "example": "6540e173fcec8c3a63bbd7b5"
+            "example": "5d51694902b2373622ff590d"
 					},
 					"amount": {
 						"type": "number",
@@ -1333,7 +1344,13 @@
 						"type": "string",
 						"description": "Date added exercise",
 						"example": "DD-MM-YYYY"
+					},
+					"time": {
+						"type": "string",
+						"description": "Time added exercise",
+						"example": "3"
 					}
+
 				}
 			},    
 
@@ -1370,12 +1387,18 @@
               "properties": {
 					"productId": {
 						"type": "string",
-						"description": "Product id"
+						"description": "Product id",
+            "example": "6540e173fbeb8c3a63bbd7nm"
 					},
 					"amount": {
 						"type": "number",
 						"description": "Number of grams",
 						"example": "10"						
+					},				
+					"calories": {
+						"type": "number",
+						"description": "Number of calories",
+						"example": "34"						
 					},				
                 "_id": {
                   "type": "string",
@@ -1394,6 +1417,16 @@
                   "type": "string",
         					"example": "6540e173fcec8c3a63bbd7b8"
                 },
+					"time": {
+						"type": "number",
+						"description": "Number of grams",
+						"example": "3"						
+					},				
+					"calories": {
+						"type": "number",
+						"description": "Number of calories",
+						"example": "5"						
+					},
                 "_id": {
                   "type": "string",
         					"example": "6540e173fcec8c3a63bbd7b2"
@@ -1439,15 +1472,15 @@
 					"message": {
 						"type": "string",
 						"description": "Product deleted successfully",
-            "example": "Product deleted successfully" 
+            "example": "Product deleted successfully. Total consumed calories: 61" 
 					}
 				}
 			},      
 "DiaryDeleteExerciseRequest": {
 				"type": "object",
-				"required": ["exerciseId", "date"],
+				"required": ["id", "date"],
 				"properties": {
-					"exerciseId": {
+					"id": {
 						"type": "string",
 						"description": "Exercise id",
             "example": "6540e173fcec8c3a63bbd7b2"            						
@@ -1464,21 +1497,10 @@
 					"message": {
 						"type": "string",
 						"description": "Exercise deleted successfully",
-            "example": "Exercise deleted successfully" 
+            "example": "Exercise deleted successfully. Total exercise time: 3. Total burned calories: 5" 
 					}
 				}
 			},   
-			"DairyGetRequest": {
-				"type": "object",
-				"required": ["date"],
-				"properties": {
-					"date": {
-						"type": "string",
-						"example": "DD-MM-YYYY"
-					}
-				}
-			},
-
 			"ErrorResponse": {
 				"type": "object",
 				"properties": {
