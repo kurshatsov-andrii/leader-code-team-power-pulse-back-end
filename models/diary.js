@@ -13,7 +13,7 @@ const diarySchema = new Schema(
 
     date: {
       type: String,
-      format: 'dd/mm/YYYY',
+      format: 'dd-mm-YYYY',
       required: true || date,
     },
 
