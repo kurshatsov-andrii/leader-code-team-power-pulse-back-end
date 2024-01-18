@@ -804,8 +804,8 @@
 				"tags": ["Diary"],
 				"summary": "Get added products and exercises",
 				"security": [{ "Bearer": [] }],
-				"parameters": [],
-								"requestBody": {
+				"parameters": [],        
+					"requestBody": {
 					"description": "Diary object",
 					"required": true,
 					"content": {
@@ -1467,16 +1467,14 @@
             "example": "Exercise deleted successfully" 
 					}
 				}
-			},      
-
+			},   
 			"DairyGetRequest": {
 				"type": "object",
 				"required": ["date"],
 				"properties": {
 					"date": {
 						"type": "string",
-						"description": "User date",
-						"example": "17/01/2024"
+						"example": "DD/MM/YYYY"
 					}
 				}
 			},
