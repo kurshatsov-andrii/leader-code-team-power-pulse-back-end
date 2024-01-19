@@ -29,4 +29,6 @@ router.patch(
   ctrl.updateAvatar
 );
 
+router.get('/profile/targets', authenticate, ctrl.getTargets);
+
 module.exports = router;
