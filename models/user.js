@@ -24,15 +24,15 @@ const userSchema = new Schema(
     },
     height: {
       type: Number,
-      default: 150,
+      default: 0,
     },
     currentWeight: {
       type: Number,
-      default: 60,
+      default: 0,
     },
     desiredWeight: {
       type: Number,
-      default: 60,
+      default: 0,
     },
     birthday: {
       type: Date,
@@ -43,27 +43,27 @@ const userSchema = new Schema(
         },
         message: 'The user must be over 18 years old.',
       },
-      default: 25 / 10 / 1995,
+      default: null,
     },
     blood: {
       type: Number,
-      enum: [1, 2, 3, 4],
-      default: 1,
+      enum: [0, 1, 2, 3, 4],
+      default: 0,
     },
     sex: {
       type: String,
-      enum: ['male', 'female'],
-      default: 'male',
+      enum: ['', 'male', 'female'],
+      default: '',
     },
     levelActivity: {
       type: Number,
-      enum: [1, 2, 3, 4, 5],
-      default: 1,
+      enum: [0, 1, 2, 3, 4, 5],
+      default: 0,
     },
 
     bmr: {
       type: Number,
-      default: 2200,
+      default: 0,
     },
     targetTime: {
       type: Number,
@@ -71,6 +71,7 @@ const userSchema = new Schema(
     },
     avatarURL: {
       type: String,
+      default: '',
     },
 
     token: { type: String, default: '' },
