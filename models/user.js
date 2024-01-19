@@ -65,6 +65,10 @@ const userSchema = new Schema(
       type: Number,
       default: 2200,
     },
+    targetTime: {
+      type: Number,
+      default: 110,
+    },
     avatarURL: {
       type: String,
     },

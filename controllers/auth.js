@@ -18,8 +18,17 @@ const register = async (req, res, next) => {
     const hashPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({ ...req.body, password: hashPassword });
+
+    const payload = {
+      id: newUser._id,
+    };
+
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
+    await User.findByIdAndUpdate(newUser._id, { token });
+
     res.status(201).json({
       user: {
+        token,
         name: newUser.name,
         email: newUser.email,
       },
@@ -127,6 +136,11 @@ const updateAvatar = async (req, res) => {
   }
 };
 
+const getTargets = (req, res) => {
+  const { bmr, targetTime } = req.user;
+  res.json({ bmr, targetTime });
+};
+
 module.exports = {
   register,
   login,
@@ -134,4 +148,5 @@ module.exports = {
   logout,
   addUserData,
   updateAvatar,
+  getTargets,
 };
