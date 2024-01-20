@@ -247,7 +247,7 @@
 				}
 			}
 		},	
-"/profiles/targets": {
+"/api/auth/profile/targets": {
             "get": {
                 "tags": ["Auth"],
                 "summary": "User training targets",
@@ -299,8 +299,7 @@
 					}                
         }
 			}
-		},	
-
+		},
     "/api/auth/avatar": {
       "patch": {
         "tags": ["Auth"],
@@ -411,7 +410,7 @@
               "type": "boolean"
             }
           },					
-          {
+{
             "name": "category",
             "in": "query",
             "description": "Choose category of products",
@@ -439,6 +438,16 @@
                 "soft drinks",
                 "vegetables and herbs"
               ]
+            }
+          },
+          {
+            "name": "blood",
+            "in": "query",
+            "description": "Choose group of blood",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "enum": [1, 2, 3, 4]
             }
           }
         ],
@@ -1195,11 +1204,6 @@
 						"format": "email",
             "example": "max@gmail.com"
 					},
- 			"password": {
-        "type": "string",
-        "description": "User password",
-        "example": "$2b$10$Sh95JUAJThmtGHH0BDcewe6I7ZORt1xMS.TN8V/nkU3L1UI81.Ua2"
-      },					
 			"height": {
             "type": "integer",
             "description": "User height",
@@ -1491,7 +1495,7 @@
 					"exerciseId": {
 						"type": "string",
 						"description": "Exercise id",
-            "example": "6540e173fcec8c3a63bbd7b5"
+            "example": "64f2458d6f67bc34bae4f7f7"
 					},
 					"date": {
 						"type": "string",
