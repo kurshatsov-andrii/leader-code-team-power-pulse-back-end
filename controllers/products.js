@@ -20,7 +20,7 @@ const getAllProductsWithFilter = async (req, res) => {
     const bloodGroup = user.blood;
 
     if (!bloodGroup) {
-      console.log('There are na information about your blood group');
+      console.log('There are no information about your blood group');
     }
 
     if (recommended === 'true') {
@@ -28,6 +28,18 @@ const getAllProductsWithFilter = async (req, res) => {
     } else {
       data[`groupBloodNotAllowed.${bloodGroup}`] = false;
     }
+  }
+  const blood = parseInt(req.query.blood, 10);
+  if (!isNaN(blood)) {
+    const validBloodGroups = [1, 2, 3, 4];
+    if (!validBloodGroups.includes(blood)) {
+      throw HttpError(
+        400,
+        'Invalid blood group, it should be a number one of 1, 2, 3, 4'
+      );
+    }
+
+    data[`groupBloodNotAllowed.${blood}`] = false;
   }
 
   const { page = 1, limit = 24 } = req.query;
