@@ -43,10 +43,20 @@ const getAllProductsWithFilter = async (req, res) => {
   }
 
   const { page = 1, limit = 24 } = req.query;
+  const parsedPage = parseInt(page, 10);
+  const parsedLimit = parseInt(limit, 10);
+
+  if (isNaN(parsedPage) || parsedPage <= 0) {
+    throw HttpError(400, 'Invalid page number');
+  }
+
+  if (isNaN(parsedLimit) || parsedLimit <= 0) {
+    throw HttpError(400, 'Invalid limit number');
+  }
   const sum = await Product.find(data).count();
   const products = await Product.find(data)
-    .limit(limit)
-    .skip(limit * (page - 1));
+    .limit(parsedLimit)
+    .skip(parsedLimit * (parsedPage - 1));
 
   if (!products) {
     throw HttpError(errorType.BAD_REQUEST);
@@ -54,11 +64,12 @@ const getAllProductsWithFilter = async (req, res) => {
 
   res.json({
     sum,
-    page,
-    limit,
+    page: parsedPage,
+    limit: parsedLimit,
     products,
   });
 };
+
 const getProductsCategory = async (req, res) => {
   const result = await ProductsCategory.find();
   res.json(result);
