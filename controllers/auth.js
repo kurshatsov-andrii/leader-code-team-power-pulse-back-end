@@ -98,7 +98,8 @@ const addUserData = async (req, res, next) => {
       }
     );
 
-    const { desiredWeight, height, birthday, sex, levelActivity } = updatedData;
+    const { desiredWeight, height, birthday, sex, levelActivity, id } =
+      updatedData;
 
     const bmr = calculateBMR(
       desiredWeight,
@@ -112,8 +113,10 @@ const addUserData = async (req, res, next) => {
 
     await updatedData.save();
 
+    const user = await User.findById(id, '-createdAt -updatedAt -password');
+
     if (updatedData) {
-      res.status(201).json(updatedData);
+      res.status(201).json(user);
     } else {
       res.status(404).json({ message: 'User not found' });
     }

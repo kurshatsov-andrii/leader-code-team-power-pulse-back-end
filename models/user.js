@@ -2,8 +2,12 @@ const { Schema, model } = require('mongoose');
 const Joi = require('joi');
 
 const { handleMongooseError } = require('../helpers');
-
-const emailRegexp = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+const {
+  emailRegexp,
+  levelsActivity,
+  sex,
+  blood,
+} = require('../constans/constans');
 
 const userSchema = new Schema(
   {
@@ -47,23 +51,23 @@ const userSchema = new Schema(
     },
     blood: {
       type: Number,
-      enum: [0, 1, 2, 3, 4],
-      default: 0,
+      enum: blood,
+      default: 1,
     },
     sex: {
       type: String,
-      enum: ['', 'male', 'female'],
-      default: '',
+      enum: sex,
+      default: 'male',
     },
     levelActivity: {
       type: Number,
-      enum: [0, 1, 2, 3, 4, 5],
-      default: 0,
+      enum: levelsActivity,
+      default: 1,
     },
 
     bmr: {
       type: Number,
-      default: 0,
+      default: 2200,
     },
     targetTime: {
       type: Number,
@@ -81,12 +85,20 @@ const userSchema = new Schema(
 
 const registerSchema = Joi.object({
   name: Joi.string().required(),
-  email: Joi.string().pattern(emailRegexp).required(),
+  email: Joi.string().pattern(emailRegexp).required().messages({
+    'string.base': 'The email must be a string.',
+    'any.required': 'email field is required.',
+    'string.pattern.base': 'The email must be in format test@gmail.com.',
+  }),
   password: Joi.string().min(6).required(),
 });
 
 const loginSchema = Joi.object({
-  email: Joi.string().pattern(emailRegexp).required(),
+  email: Joi.string().pattern(emailRegexp).required().messages({
+    'string.base': 'The email must be a string.',
+    'any.required': 'email field is required.',
+    'string.pattern.base': 'The email must be in format test@gmail.com.',
+  }),
   password: Joi.string().min(6).required(),
 });
 
