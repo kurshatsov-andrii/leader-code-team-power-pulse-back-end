@@ -1250,23 +1250,15 @@
         "format": "token",
         "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1M2QzYmM1MDY2NWEyZWZlNmU4YzhmMyIsImlhdCI6MTY5ODkxNjA2NCwiZXhwIjoxNjk4OTk4ODY0fQ.1sRQ0J4lbJHKmL9X2feV71DbiKTxab6J_nK2giFhURc"
       },    
-		"createdAt": {
-        "type": "string",
-        "description": "Time when user was created at",
-        "format": "Time",
-        "example": "2024-01-17T18:43:34.175Z"
-      },
-    "updatedAt": {
-        "type": "string",
-        "description": "Time when user was created at",
-        "format": "Time",
-        "example": "2024-01-17T18:43:34.175Z"
-      },
 		"avatarURL": {
 				"type": "string",
 				"example": "https://res.cloudinary.com/dyhqa6el3/image/upload/v1705509233/avatars/65a4f4804edeef19047e30ec.jpg"
-					}     
-
+					},
+				"targetTime": {
+        "type": "number",
+        "description": "User target time",
+        "example": 110
+      }
 				}
 			},
       "UserTargetsResponse": {
