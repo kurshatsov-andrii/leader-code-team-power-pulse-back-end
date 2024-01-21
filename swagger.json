@@ -540,7 +540,7 @@
             "Bearer": []
           }
         ],
-        "parameters": [],
+        "parameters": [],        
         "responses": {
           "200": {
             "description": "OK",
@@ -605,13 +605,34 @@
                         "schema": {
                             "type": "string",
                             "enum": [
-                                "body-part",
-                                "muscles",
-                                "equipment"
+                                "Body parts",
+                                "Muscles",
+                                "Equipment"
                             ]
                         },
                         "description": "Prefilter parameter"
-                    }
+                    },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Items per page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+
                 ],
                 "responses": {
                     "200": {
@@ -1373,14 +1394,7 @@
           }              			
       },	
 "AllExercisesResponse": {
-                "type": "object",
-                "description": "Total count of elements",
-                "properties": {
-                    "length": {
-                        "type": "integer",
-                        "example": 1324
-                    },
-                    "data": {
+                
                         "type": "array",
                         "items": {
                             "type": "object",
@@ -1420,17 +1434,24 @@
           }
 
                             }
-                        }
-                    }
+                    
                 }
             },      
 "ExercisesResponse": {
                 "type": "object",
                 "description": "Total count of elements in filtered collection",
                 "properties": {
-                    "length": {
+                    "dataLength": {
                         "type": "integer",
                         "example": 10
+                    },
+                    "dataMaxLength": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "maxPage": {
+                        "type": "integer",
+                        "example": 1
                     },
                     "data": {
                         "type": "array",
