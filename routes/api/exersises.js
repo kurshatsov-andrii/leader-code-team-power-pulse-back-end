@@ -5,32 +5,18 @@ const router = express.Router();
 
 router.get(
   '/',
-  authenticate,
-  ExersisesController.fetchExercises
+  // authenticate,
+  ExersisesController.filterExercises
 );
 
 router.get(
   '/categories',
-  authenticate,
+  // authenticate,
   ExersisesController.fetchCategories
 );
 
-router.get(
-  '/body-part',
-  authenticate,
-  ExersisesController.fetchBodyParts
-);
+router.get('/:filter/:exerciseFilter', ExersisesController.filterExercises);
+router.get('/:filter', ExersisesController.filterCategories);
 
-router.get(
-  '/muscles',
-  authenticate,
-  ExersisesController.fetchMuscles
-);
-
-router.get(
-  '/equipment',
-  authenticate,
-  ExersisesController.fetchEquipment
-);
 
 module.exports = router;

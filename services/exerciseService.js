@@ -7,23 +7,33 @@ class ExerciseService {
     this.exerciseModel = ExerciseModel;
   }
 
-  fetchCategories = async query => {
-    const filter = {};
-
-    if (query) {
-      filter.filter = query;
-    }
-
-    return (await this.categoriesModel.find(filter)) ?? null;
+  correctRequests = {
+    'Body parts': 'bodyPart',
+    Muscles: 'target',
+    Equipment: 'equipment',
   };
 
-  fetchExercises = async query => {
+  fetchCategories = async params => {
     const filter = {};
 
-    if (query) {
-      filter.filter = query;
+    if (params) {
+      filter.filter = params;
     }
-    return (await this.exerciseModel.find(filter)) ?? null;
+
+    const result = await this.categoriesModel.find(filter);
+    return result ?? null;
+  };
+
+  fetchExercises = async params => {
+    const { filter, exerciseFilter } = params;
+    const corectRequest = this.correctRequests[filter];
+
+    console.log({ [corectRequest]: exerciseFilter });
+
+    return (
+      (await this.exerciseModel.find({ [corectRequest]: exerciseFilter })) ??
+      null
+    );
   };
 }
 
