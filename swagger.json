@@ -530,7 +530,7 @@
         }
       }
     },
-		"/exercises": {
+"/exercises": {
       "get": {
         "tags": ["Exercises"],
         "summary": "Return all exercises",
@@ -584,9 +584,8 @@
           }
         }
       }
-    },
-
-"/exercises/{filter}": {
+    },    
+"/exercises/{category}": {
             "get": {
                 "tags": [
                     "Exercises"
@@ -601,7 +600,7 @@
                     {
 											"required": true,
                         "in": "path",
-                        "name": "filter",
+                        "name": "category",
                         "schema": {
                             "type": "string",
                             "enum": [
@@ -676,7 +675,142 @@
 						}						
 					}                }
             }
-        },		
+        },	
+
+		"/exercises/{category}/{subcategory}": {
+      "get": {
+        "tags": ["Exercises"],
+        "summary": "Return exercises categories and subcategories",        
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["Body parts", "Equipment", "Muscles"]
+            },
+            "description": "Choose one of the following categories"
+          },
+          {
+            "name": "subcategory",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "back",
+                "cardio",
+                "chest",
+                "lower arms",
+                "lower legs",
+                "neck",
+                "shoulders",
+                "upper arms",
+                "upper legs",
+                "waist",                
+                "assisted",
+                "band",
+                "barbell",
+                "body weight",
+                "bosu ball",
+                "cable",
+                "dumbbell",
+                "elliptical machine",
+                "ez barbell",
+                "hammer",
+                "kettlebell",
+                "leverage machine",
+                "medicine ball",
+                "olympic barbell",
+                "resistance band",
+                "roller",
+                "rope",
+                "skierg machine",
+                "sled machine",
+                "smith machine",
+                "stability ball",
+                "stationary bike",
+                "stepmill machine",
+                "tire",
+                "trap bar",
+                "upper body ergometer",
+                "weighted",
+                "wheel roller",                
+                "abductors",
+                "abs",
+                "adductors",
+                "biceps",
+                "calves",
+                "cardiovascular system",
+                "delts",
+                "forearms",
+                "glutes",
+                "hamstrings",
+                "lats",
+                "levator scapulae",
+                "pectorals",
+                "quads",
+                "serratus anterior",
+                "spine",
+                "traps",
+                "triceps",
+                "upper back"
+              ]
+            },
+            "description": "Select a subcategory for the selected category from the list"
+          }
+        ],        
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllExercisesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+							}
+						}
+          }
+        },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
   "/diary/addProduct": {
 			"post": {
 				"tags": ["Diary"],
