@@ -28,8 +28,6 @@ class ExerciseService {
     const { filter, exerciseFilter } = params;
     const corectRequest = this.correctRequests[filter];
 
-    console.log({ [corectRequest]: exerciseFilter });
-
     return (
       (await this.exerciseModel.find({ [corectRequest]: exerciseFilter })) ??
       null
