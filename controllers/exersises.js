@@ -13,9 +13,9 @@ class ExersisesController {
     const data = arrData.slice(startIdx, endIdx);
     const dataLength = data.length;
     const dataMaxLength = arrData.length;
-    const maxPage = Math.ceil(dataMaxLength / limit);
+    const maxPages = Math.ceil(dataMaxLength / limit);
 
-    return { data, dataLength, dataMaxLength, maxPage };
+    return { data, dataLength, dataMaxLength, maxPages };
   };
 
   fetchAllCategories = async query => {
@@ -29,17 +29,13 @@ class ExersisesController {
   };
 
   filterExercises = async (req, res) => {
-    const {
-      params,
-      query: { limit = 10, page = 1 },
-    } = req;
+    const { params } = req;
 
     const specialExercises = await this.service.fetchExercises(params);
 
     if (!specialExercises) {
       HttpError(400);
     }
-
 
     res.status(200).json(specialExercises);
   };
