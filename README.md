@@ -49,3 +49,19 @@ Work with endpoints is detailed in the documentation
 [Power Pulse API](https://leader-code-team-power-pulse-back-end.onrender.com/api-docs/).
 Documentation created using npm
 [swagger-ui-express](https://www.npmjs.com/package/swagger-ui-express)
+
+## Figma
+
+`Look at`
+[**Figma**](https://www.figma.com/file/0xm1EIt7GWmWxWTa8xu2K5/Power-Pulse-2.0?type=design&node-id=0-1&mode=design&t=vJw2X0p5TitKmQP2-0)
+project design
+
+## Commands
+
+- `npm install` &mdash; start
+- `npm start` &mdash; server start in production mode
+- `npm run start:dev` &mdash; start the server in development mode
+- `npm run lint` &mdash; run a code check execution with eslint is necessary run
+  before each PR and fix all linter errors
+- `npm lint:fix` &mdash; same linter check but with automatic ones corrections
+  of simple errors
