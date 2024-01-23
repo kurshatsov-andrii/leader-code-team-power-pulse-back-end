@@ -6,9 +6,8 @@ const Exercise = require('../models/exercisesSchema');
 const getDiary = async (req, res) => {
   const { _id: owner } = req.user;
   const { date } = req.params;
-  console.log('date', date);
 
-  const diaryEntry = await Diary.findOne({
+  let diaryEntry = await Diary.findOne({
     owner,
     date,
   })
@@ -22,7 +21,11 @@ const getDiary = async (req, res) => {
     );
 
   if (!diaryEntry) {
-    throw HttpError(400, 'Diary entry not found');
+    console.log('returning new diary');
+    diaryEntry = new Diary({
+      owner,
+      date,
+    });
   }
 
   res.status(200).json(diaryEntry);
